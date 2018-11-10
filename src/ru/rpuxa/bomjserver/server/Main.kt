@@ -8,7 +8,7 @@ import kotlin.concurrent.thread
 private val server = SocketServer()
 private val reader = BufferedReader(InputStreamReader(System.`in`))
 
-fun main() {
+fun main(unused: Array<String>) {
     try {
         thread(isDaemon = true) {
             while (true) {

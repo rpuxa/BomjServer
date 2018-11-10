@@ -3,7 +3,7 @@ package ru.rpuxa.bomjserver.server
 import java.net.InetAddress
 import java.net.ServerSocket
 
-private const val ADDRESS = "10.222.235.149"
+private const val ADDRESS = "10.60.33.24"
 private const val PORT = 7158
 
 class SocketServer : Server {
