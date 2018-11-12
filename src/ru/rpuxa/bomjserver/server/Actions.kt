@@ -3,7 +3,9 @@ package ru.rpuxa.bomjserver.server
 import ru.rpuxa.bomjserver.CachedAction
 import ru.rpuxa.bomjserver.CachedChainElement
 import ru.rpuxa.bomjserver.CachedCourse
+import java.lang.Exception
 import java.util.*
+import kotlin.properties.Delegates
 
 const val RUB = 0
 const val EURO = 1
@@ -27,6 +29,9 @@ object Actions {
 
 
     val hash get() = Objects.hash(actions, locations, friends, transports, homes, courses)
+
+    fun getActions(level: Int, menu: Int) =
+            actions.filter { it.level.toInt() == level && it.menu.toInt() == menu }
 
     private inline val Int.rub get() = Actions.Money(this, RUB)
     private inline val Int.euro get() = Actions.Money(this, EURO)
@@ -88,12 +93,6 @@ object Actions {
                 e("Дом на берегу моря", 7, 1, 0, 1, 0, 600.bitcoin)
         )
 
-        job(0) {
-            add(0, "Пособирать бутылки", 25.bottle, -10, -20, -10)
-            add(1, "Пособирать монеты", 60.rub, -10, -20, -10)
-            add(2, "Украсть бабки у уличных музыкантов", 100.rub, -10, -10, -10, false)
-        }
-
         job(1) {
             add(3, "Пойти с Василием за бутылками", 45.bottle, -5, -20, -10)
             add(4, "Пособирать монеты из фонтана", 120.rub, -10, -20, -10)
@@ -149,23 +148,33 @@ object Actions {
 
         location(0) {
             food {
-                add(32, "Жрать объедки с помойки", FREE, -10, -15, 25)
-                add(33, "Купить бутер", 40.rub, -5, -5, 30)
-                add(34, "Купить шаурму", 100.rub, -5, -5, 70)
-                add(35, "Отжать семки у голубей", FREE, -5, -5, 50, false)
+                rate = 124
+                add(32, "Жрать объедки с помойки", free = true)
+                add(33, "Купить бутер")
+                add(34, "Купить шаурму")
+                addIllegal(35, "Отжать семки у голубей")
             }
 
             health {
-                add(36, "Пособирать травы", FREE, 20, -10, -5)
-                add(37, "Сходить к бабке", 70.rub, 60, -10, -5)
-                add(38, "Спереть лекарства с аптеки", FREE, 50, -15, -5, false)
+                rate = 124
+                add(36, "Пособирать травы", free = true)
+                add(108, "Купить настойку бояры")
+                add(37, "Сходить к бабке")
+                addIllegal(38, "Спереть лекарства с аптеки")
             }
 
             energy {
-                add(39, "Поспать", FREE, -5, 20, -5)
-                add(40, "Выпить палёнки", 45.rub, -5, 50, -5)
-                add(41, "Купить пивас", 60.rub, 0, 70, -5)
-                add(42, "Украсть Редбулл", FREE, -10, 60, -5, false)
+                rate = 90
+                add(39, "Поспать", free = true)
+                add(40, "Выпить палёнки")
+                add(41, "Купить пивас")
+                addIllegal(42, "Украсть Редбулл")
+            }
+
+            job {
+                add(0, "Пособирать бутылки", 25.bottle, -10, -20, -10)
+                add(1, "Пособирать монеты", 60.rub, -10, -20, -10)
+                add(2, "Украсть бабки у уличных музыкантов", 100.rub, -10, -10, -10, false)
             }
         }
 
@@ -291,7 +300,14 @@ object Actions {
 
     init {
         actions = actionsList.toTypedArray()
+        for (actions)
     }
+
+
+    private const val FREE_ACTION_ADD = 15
+    private const val ILLEGAL_ACTION_ADD = 80
+    private const val FREE_ACTION_REMOVE = -7
+    private const val ACTION_REMOVE = -5
 
     private inline fun job(friend: Int, block: Job.() -> Unit) = Job(friend).block()
 
@@ -303,8 +319,55 @@ object Actions {
         inline fun health(block: Menu.() -> Unit) = Menu(HEALTH).block()
 
         internal inner class Menu(val type: Int) {
+            //Сколько нужно потратить рублей за 100 ед
+            var rate: Int by Delegates.notNull()
+
+            private var count = 0
+
             fun add(id: Int, name: String, removeMoney: Money, health: Int, energy: Int, food: Int, legal: Boolean = true) {
                 addAction(id, i, type, name, removeMoney, health, energy, food, legal)
+            }
+
+            fun add(id: Int, name: String, currency: Int = RUB, free: Boolean = false) {
+                if (free) {
+                    val (energy, food, health) = when (type) {
+                        ENERGY -> Triple(FREE_ACTION_ADD, FREE_ACTION_REMOVE, FREE_ACTION_REMOVE)
+                        FOOD -> Triple(FREE_ACTION_REMOVE, FREE_ACTION_ADD, FREE_ACTION_REMOVE)
+                        HEALTH -> Triple(FREE_ACTION_REMOVE, FREE_ACTION_REMOVE, FREE_ACTION_ADD)
+                        else -> throw Exception()
+                    }
+                    add(id, name, FREE, health, energy, food, true)
+                    return
+                }
+
+                val actionAdd = when (count++) {
+                    0 -> 30
+                    1 -> 60
+                    2 -> 90
+                    3 -> 100
+                    else -> throw Exception()
+                }
+
+                val cost = rate * actionAdd * getCost(RUB) / (100 * getCost(currency))
+
+                val (energy, food, health) = when (type) {
+                    ENERGY -> Triple(actionAdd, ACTION_REMOVE, ACTION_REMOVE)
+                    FOOD -> Triple(ACTION_REMOVE, actionAdd, ACTION_REMOVE)
+                    HEALTH -> Triple(ACTION_REMOVE, ACTION_REMOVE, actionAdd)
+                    else -> throw Exception()
+                }
+
+                add(id, name, Money(cost, currency), health, energy, food, true)
+            }
+
+            fun addIllegal(id: Int, name: String) {
+                val (energy, food, health) = when (type) {
+                    ENERGY -> Triple(ILLEGAL_ACTION_ADD, FREE_ACTION_REMOVE, FREE_ACTION_REMOVE)
+                    FOOD -> Triple(FREE_ACTION_REMOVE, ILLEGAL_ACTION_ADD, FREE_ACTION_REMOVE)
+                    HEALTH -> Triple(FREE_ACTION_REMOVE, FREE_ACTION_REMOVE, ILLEGAL_ACTION_ADD)
+                    else -> throw Exception()
+                }
+                add(id, name, FREE, health, energy, food, false)
             }
         }
     }
@@ -334,4 +397,12 @@ object Actions {
     )
 
     private class Money(val value: Int, val currency: Int)
+
+    fun getCost(currency: Int) = when (currency) {
+        RUB -> 2
+        BOTTLES -> 3
+        EURO -> 140
+        BITCOIN -> 4000
+        else -> throw Exception()
+    }
 }
