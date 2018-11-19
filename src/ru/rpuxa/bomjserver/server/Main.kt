@@ -49,8 +49,8 @@ fun main(unused: Array<String>) {
                     println("Сохранение прошло успешно")
                 }
 
-                "actions" -> {
-                    CacheActions.saveToFile()
+                "actionsList" -> {
+                    CommandExecutor.cached.saveToFile()
                     println("Файл создан!")
                 }
 
@@ -71,6 +71,5 @@ fun main(unused: Array<String>) {
 
 fun save() {
     DataBase.saveToFile()
-   // CacheActions.saveToFile()
 }
 

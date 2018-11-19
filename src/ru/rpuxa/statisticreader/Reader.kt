@@ -1,8 +1,7 @@
 package ru.rpuxa.statisticreader
 
-import ru.rpuxa.bomjserver.CachedAction
 import ru.rpuxa.bomjserver.Review
-import ru.rpuxa.bomjserver.server.Actions
+import ru.rpuxa.bomjserver.server.actions.Actions
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.InputStreamReader
@@ -23,8 +22,8 @@ fun main(_u: Array<String>) {
         reviews = it.readObject() as ArrayList<Review>
     }
     val list = stat.sortedBy { it[AGE] as Int }
-    stat = stat.filter { it[AGE] as Int > 30 }
-    println("Загружено!")
+    stat = stat.filter { it[AGE] as Int > 30 /*&& it[VERSION_CODE] as Int == 17 */ }
+    println("Загружено ${stat.size} сохранений")
     while (true) {
         print("> ")
         val line = reader.readLine().split(' ')
@@ -53,7 +52,7 @@ fun main(_u: Array<String>) {
                 for (s in stat) {
                     val statActions = s[ACTIONS] as IntArray
                     for (action in actions) {
-                        val id = action.id.toInt()
+                        val id = action.id
                         val c = actionsCount[id]
                         if (c == null) {
                             actionsCount[id] = 0
@@ -63,7 +62,7 @@ fun main(_u: Array<String>) {
                     }
                 }
                 for (action in actions) {
-                    println("${action.name} = ${actionsCount[action.id.toInt()]!!.toFloat() * 100 / all}%")
+                    println("${action.name} = ${actionsCount[action.id]!!.toFloat() * 100 / all}%")
                 }
             }
 
@@ -77,10 +76,36 @@ fun main(_u: Array<String>) {
                 println("all = $all")
                 vip.forEachIndexed { index, i -> println("$index = ${i.toFloat() * 100 / all}%") }
             }
+
+            "locationDays" -> {
+                val allLoc = arrayOf(0, 0, 0, 0, 0)
+                val countLoc = arrayOf(0, 0, 0, 0, 0)
+                for (s in stat) {
+                    val actionsStat = s[ACTIONS] as IntArray
+                    var first = true
+                    for (loc in arrayOf(5, 4, 2, 1, 0)) {
+                        var all = 0
+                        for (action in Actions.getActions(loc)) {
+                            all += actionsStat[action.id]
+                        }
+                        if (all != 0) {
+                            if (first) {
+                                first = false
+                                continue
+                            }
+                            allLoc[loc] += all
+                            countLoc[loc]++
+                        }
+                    }
+                }
+
+                for (i in allLoc.indices) {
+                    println("$i -> ${allLoc[i].toDouble() / countLoc[i]} days, ${countLoc[i]} count")
+                }
+            }
         }
     }
 }
-
 
 
 const val ID = 0
