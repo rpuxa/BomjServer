@@ -51,7 +51,7 @@ fun main(unused: Array<String>) {
 
                 "actionsList" -> {
                     CommandExecutor.cached.saveToFile()
-                    println("Файл создан!")
+                    println("Файл создан!!")
                 }
 
                 "news" -> {

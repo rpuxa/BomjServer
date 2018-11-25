@@ -62,13 +62,13 @@ object Actions {
 
             health {
                 add(36, "Пособирать травы", free = true)
-                //  add(108, "Купить настойку бояры")
+                add(108, "Купить настойку бояры")
                 add(37, "Сходить к бабке")
                 add(38, "Спереть лекарства с аптеки", illegal = true)
             }
 
             energy {
-                add(39, "Поспать", free = true)
+                add(39, "Поспать на помойке", free = true)
                 add(40, "Выпить палёнки")
                 add(41, "Купить пивас")
                 add(42, "Украсть Редбулл", illegal = true)
@@ -150,13 +150,14 @@ object Actions {
             home("Отремонтированная комната в заброшке", 15700.rub)
 
             food {
-                add(109, "Купить тушёнку")
-                add(110, "Заварить доширак")
+                add(109, "Заварить доширак")
+                add(110, "Пожарить котлет")
+                add(110, "Сварить рис")
                 add(111, "Ограбить ларек", illegal = true)
             }
 
             health {
-                add(112, "")
+                add(112, "Сходить в поликлинику")
             }
 
             energy {
@@ -297,7 +298,7 @@ object Actions {
     }
 
     private inline fun location(id: Int, name: String, course: Int = -1, block: Location.() -> Unit) {
-        locations.add(ChainElement(name, id - 1, id - 1, id, id, course, FREE))
+        locations.add(ChainElement(name, course, FREE))
         Location(id).block()
     }
 
@@ -312,15 +313,15 @@ object Actions {
         inline fun job(block: Menu.() -> Unit) = Menu(level, JOBS).block()
 
         fun friend(name: String, cost: Money, course: Int = -1) {
-            friends.add(ChainElement(name, level - 1, -1, -1, -1, course, cost))
+            friends.add(ChainElement(name, course, cost))
         }
 
         fun home(name: String, cost: Money, course: Int = -1) {
-            homes.add(ChainElement(name, level - 1, -1, -1, -1, course, cost))
+            homes.add(ChainElement(name, course, cost))
         }
 
         fun transport(name: String, cost: Money, course: Int = -1) {
-            transports.add(ChainElement(name, level - 1, -1, -1, -1, course, cost))
+            transports.add(ChainElement(name, course, cost))
         }
     }
 

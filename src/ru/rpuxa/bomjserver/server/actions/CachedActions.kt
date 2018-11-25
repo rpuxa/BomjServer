@@ -32,9 +32,9 @@ class CachedActions(params: Array<LocationParams>) {
                 all += element.cost.toCU()
             }
 
-            val (jobC, energyC, healthC) = Strategy.calculateCoefficients(param.days, all, 0.1, param.jobCost, param.energyCost, param.healthCost)
+            val (jobC, energyC, healthC) = Strategy.calculateCoefficients(param.days, all, 0.15, param.jobCost, param.energyCost, param.healthCost)
 
-
+val pr = jobC - (1135 * healthC + 1509 * energyC) / 559504
             // работа
             var illegalIndex = 0
             var legalIndex = 0
@@ -122,7 +122,7 @@ class CachedActions(params: Array<LocationParams>) {
                     }
 
                     actionsList.add(CachedAction(
-                            action.id.toShort(), param.level.toByte(), ENERGY.toByte(), action.name,
+                            action.id.toShort(), param.level.toByte(), menu.toByte(), action.name,
                             cost, action.currency.toByte(), remove.toShort(),
                             (if (menu == FOOD) add else remove).toShort(), (if (menu == HEALTH) add else remove).toShort(),
                             action.illegal
@@ -132,10 +132,26 @@ class CachedActions(params: Array<LocationParams>) {
         }
 
         actions = actionsList.toTypedArray()
-        locations = Actions.locations.toCached()
-        friends = Actions.friends.toCached()
-        transports = Actions.transports.toCached()
-        homes = Actions.homes.toCached()
+
+        locations = Actions.locations.mapIndexed { index, element ->
+            CachedChainElement(
+                    element.name, (index - 1).toByte(), (index - 1).toByte(),
+                    index.toByte(), index.toByte(), element.course.toByte(),
+                    element.cost.value, element.cost.currency.toByte()
+            )
+        }.toTypedArray()
+
+        friends = Actions.friends.mapIndexed { index, element ->
+            CachedChainElement(
+                    element.name, index.toByte(), (index - 1).toByte(),
+                    index.toByte(), index.toByte(), element.course.toByte(),
+                    element.cost.value, element.cost.currency.toByte()
+            )
+        }.toTypedArray()
+
+        transports = Actions.transports.transportsOrHomesToCached()
+        homes = Actions.homes.transportsOrHomesToCached()
+
         courses = Actions.courses.map {
             CachedCourse(
                     it.id.toByte(), it.name, it.cost.value,
@@ -144,11 +160,11 @@ class CachedActions(params: Array<LocationParams>) {
         }.toTypedArray()
     }
 
-    private fun ArrayList<ChainElement>.toCached() = map {
+    private fun ArrayList<ChainElement>.transportsOrHomesToCached() = mapIndexed { index, element ->
         CachedChainElement(
-                it.name, it.location.toByte(), it.friend.toByte(),
-                it.transport.toByte(), it.home.toByte(), it.course.toByte(),
-                it.cost.value, it.cost.currency.toByte()
+                element.name, (index - 1).toByte(), (index - 1).toByte(),
+                (index - 1).toByte(), (index - 1).toByte(), element.course.toByte(),
+                element.cost.value, element.cost.currency.toByte()
         )
     }.toTypedArray()
 
