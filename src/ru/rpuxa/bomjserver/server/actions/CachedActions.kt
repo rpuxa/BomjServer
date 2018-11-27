@@ -32,9 +32,10 @@ class CachedActions(params: Array<LocationParams>) {
                 all += element.cost.toCU()
             }
 
-            val (jobC, energyC, healthC) = Strategy.calculateCoefficients(param.days, all, 0.15, param.jobCost, param.energyCost, param.healthCost)
-
-val pr = jobC - (1135 * healthC + 1509 * energyC) / 559504
+            var (jobC, energyC, healthC) = Strategy.calculateCoefficients(param.days, all, 2.2, param.jobCost, param.energyCost, param.healthCost)
+            jobC /= 30
+            energyC /= 30
+            healthC /= 30
             // работа
             var illegalIndex = 0
             var legalIndex = 0
@@ -58,8 +59,10 @@ val pr = jobC - (1135 * healthC + 1509 * energyC) / 559504
 
                 val healthNeeded = energyNeeded / 2
 
-                val salary = round(healthNeeded * jobC).toInt().convertTo(action.currency) *
+                val salary = (round((
+                        energyNeeded * jobC).convertTo(action.currency) *
                         if (action.illegal) 2 else 1
+                )).toInt()
 
                 actionsList.add(CachedAction(
                         action.id.toShort(), param.level.toByte(), JOBS.toByte(), action.name,
@@ -78,7 +81,7 @@ val pr = jobC - (1135 * healthC + 1509 * energyC) / 559504
                     2 -> 80
                     else -> throw IllegalStateException()
                 } * if (action.illegal) 2 else 1
-                var cost = round(energyAdded * energyC).toInt().convertTo(action.currency)
+                var cost = round((energyAdded * energyC).convertTo(action.currency)).toInt()
                 var healthAdd = -5
 
                 if (action.illegal) {
@@ -109,7 +112,7 @@ val pr = jobC - (1135 * healthC + 1509 * energyC) / 559504
                         else -> throw IllegalStateException()
                     } * if (action.illegal) 2 else 1
 
-                    var cost = round(add * healthC).toInt().convertTo(action.currency)
+                    var cost = round((add * healthC).convertTo(action.currency)).toInt()
                     var remove = -5
 
                     if (action.illegal) {
@@ -168,7 +171,7 @@ val pr = jobC - (1135 * healthC + 1509 * energyC) / 559504
         )
     }.toTypedArray()
 
-    private fun Int.convertTo(currency: Int) = this / Money.getCU(currency)
+    private fun Double.convertTo(currency: Int) = this / Money.getCU(currency)
 
     fun saveToFile() {
         try {

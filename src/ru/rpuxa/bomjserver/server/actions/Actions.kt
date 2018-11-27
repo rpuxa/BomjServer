@@ -40,12 +40,12 @@ object Actions {
         courses = arrayOf(
                 Course(0, "Езда на самокате", 50.rub, 10),
                 Course(1, "Езда на велосипеде", 200.rub, 30),
-                Course(2, "ПДД", 1000.rub, 50),
-                Course(3, "Строение авто", 100.euro, 100),
-                Course(4, "Строительство", 100.euro, 100),
-                Course(5, "Программирование", 300.euro, 100),
-                Course(6, "Торговле валютами", 600.euro, 100),
-                Course(7, "Управление персоналом", 40.bitcoin, 100)
+                Course(2, "ПДД", 900.rub, 50),
+                Course(3, "Строение авто", 90.euro, 100),
+                Course(4, "Строительство", 90.euro, 100),
+                Course(5, "Программирование", 290.euro, 100),
+                Course(6, "Торговле валютами", 490.euro, 100),
+                Course(7, "Управление персоналом", 39.bitcoin, 100)
         )
 
         location(0, "Помойка на окраине") {
@@ -76,15 +76,16 @@ object Actions {
 
             job {
                 add(0, "Пособирать бутылки", currency = BOTTLES)
+                add(121, "Драться за бутылки", currency = BOTTLES)
                 add(1, "Пособирать монеты")
                 add(2, "Украсть бабки у уличных музыкантов", illegal = true)
             }
         }
 
         location(1, "Подъезд") {
-            friend("Сосед по подъезду Василий", 60.bottle)
-            transport("Самокат", 500.rub, 0)
-            home("Палатка б/у", 1000.rub)
+            friend("Сосед по подъезду Василий", 30.bottle)
+            transport("Самокат", 400.rub, 0)
+            home("Палатка б/у", 700.rub)
 
             food {
                 add(43, "Жрать объедки с помойки", free = true)
@@ -114,9 +115,9 @@ object Actions {
         }
 
         location(2, "Гаражи") {
-            friend("Гопник Валера", 300.bottle)
-            transport("Велосипед", 3000.rub, 1)
-            home("Гараж улитка", 9000.rub)
+            friend("Гопник Валера", 150.bottle)
+            transport("Велосипед", 1900.rub, 1)
+            home("Гараж улитка", 7800.rub)
 
             food {
                 add(55, "Сварить гречку")
@@ -145,23 +146,29 @@ object Actions {
         }
 
         location(3, "Заброшка") {
-            friend("Бомбила Семён", 1000.rub)
-            transport("Старая копейка", 10000.rub, 2)
-            home("Отремонтированная комната в заброшке", 15700.rub)
+            friend("Бомбила Семён", 500.rub)
+            transport("Старая копейка", 9000.rub, 2)
+            home("Отремонтированная комната в заброшке", 9000.rub)
 
             food {
                 add(109, "Заварить доширак")
-                add(110, "Пожарить котлет")
                 add(110, "Сварить рис")
-                add(111, "Ограбить ларек", illegal = true)
+                add(111, "Пожарить котлет")
+                add(112, "Ограбить ларек", illegal = true)
             }
 
             health {
-                add(112, "Сходить в поликлинику")
+                add(113, "Помолиться", free = true)
+                add(114, "Купить витамины")
+                add(115, "Сходить в поликлинику")
+                add(116, "Прессануть фармацевта", illegal = true)
             }
 
             energy {
-
+                add(117, "Поспать", free = true)
+                add(118, "Купить вискарь")
+                add(119, "Купить редбулл")
+                add(120, "Сходить в кино")
             }
 
             job {
@@ -173,9 +180,9 @@ object Actions {
         }
 
         location(4, "Дача") {
-            friend("Прораб Михалыч", 50.euro, 4)
-            transport("Девятка", 50000.rub, 3)
-            home("Сарай", 40000.rub)
+            friend("Прораб Михалыч", 29.euro, 4)
+            transport("Девятка", 29000.rub, 3)
+            home("Сарай", 27900.rub)
 
             food {
                 add(67, "Сварить мясной бульон")
@@ -185,7 +192,7 @@ object Actions {
             }
 
             health {
-                add(71, "Купить лекарства")
+                add(71, "Купить антибиотики")
                 add(72, "Сходить в больницу")
                 add(73, "Знакомый врач", currency = EURO)
             }
@@ -206,9 +213,9 @@ object Actions {
         }
 
         location(5, "Квартира в микрорайоне") {
-            friend("Программист Слава", 200.euro, 5)
-            transport("Старая Иномарка", 3300.euro)
-            home("Однушка", 4000.euro)
+            friend("Программист Слава", 90.euro, 5)
+            transport("Старая Иномарка", 1900.euro)
+            home("Однушка", 2200.euro)
 
             food {
                 add(78, "Пойти в Ашан")
@@ -237,9 +244,9 @@ object Actions {
         }
 
         location(6, "Центр города") {
-            friend("Трейдер Юля", 500.euro, 6)
-            transport("Иномарка среднего класса", 8000.euro)
-            home("Двухкомнатная в центре города", 9000.euro)
+            friend("Трейдер Юля", 290.euro, 6)
+            transport("Иномарка среднего класса", 3900.euro)
+            home("Двухкомнатная квартира", 3990.euro)
 
             food {
                 add(88, "Сходить в ТЦ")
@@ -262,14 +269,14 @@ object Actions {
                 add(24, "Зарабатывать на бинарных опционах")
                 add(25, "Управление капиталом", currency = EURO)
                 add(26, "Продажа акций", currency = EURO)
-                add(27, "Махинации с курсами валют", currency = BITCOIN)
+                add(27, "Махинации с курсами валют", currency = BITCOIN, illegal = true)
             }
         }
 
-        location(7, "Берег моря") {
-            friend("Директор IT компании Эдвард", 30.bitcoin, 7)
-            transport("Спорткар", 500.bitcoin)
-            home("Дом на берегу моря", 600.bitcoin)
+        location(7, "Заграница") {
+            friend("Директор IT компании Эдвард", 19.bitcoin, 7)
+            transport("Внедорожник", 340.bitcoin)
+            home("Частный дом", 450.bitcoin)
 
             food {
                 add(98, "Сходить на рыбалку", currency = EURO)
@@ -292,8 +299,16 @@ object Actions {
                 add(28, "Руководить в отделе безопасности", currency = EURO)
                 add(29, "Управление компанией", currency = EURO)
                 add(30, "Разработка ПО для иностранных коллег", currency = EURO)
-                add(31, "Взлом базы данных конкурентов", currency = BITCOIN)
+                add(31, "Взлом базы данных конкурентов", currency = BITCOIN, illegal = true)
             }
+        }
+    }
+
+    init {
+        for (id in 0..actions.maxBy { it.id }!!.id) {
+            val count = actions.count { it.id == id }
+            if (count != 1)
+                throw IllegalStateException("Wrong id exception. Count = $count. Id = $id")
         }
     }
 

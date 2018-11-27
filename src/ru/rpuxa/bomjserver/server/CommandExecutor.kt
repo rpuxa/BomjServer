@@ -2,8 +2,6 @@ package ru.rpuxa.bomjserver.server
 
 import ru.rpuxa.bomjserver.Review
 import ru.rpuxa.bomjserver.ServerCommand
-import ru.rpuxa.bomjserver.server.actions.CachedActions
-import ru.rpuxa.bomjserver.server.actions.LocationParams
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -22,17 +20,6 @@ internal object CommandExecutor {
 
     private var count = 0
 
-    val params = arrayOf(
-            LocationParams(0, 100, 50.0 / 30, 40.0 / 30, 50.0 / 30),
-            LocationParams(1, 150, 120.0 / 30, 100.0 / 30, 120.0 / 30),
-            LocationParams(2, 200, 200.0 / 30, 200.0 / 30, 180.0 / 30),
-            LocationParams(3, 250, 400.0 / 30, 300.0 / 30, 350.0 / 30),
-            LocationParams(4, 250, 700.0 / 30, 600.0 / 30, 700.0 / 30),
-            LocationParams(5, 300, 1500.0 / 30, 1500.0 / 30, 1300.0 / 30),
-            LocationParams(6, 300, 2500.0 / 30, 2500.0 / 30, 2000.0 / 30),
-            LocationParams(7, 300, 4500.0 / 30, 4500.0 / 30, 4000.0 / 30)
-    )
-    val cached = CachedActions(params)
 
     fun connect(socket: Socket) = thread {
         val startTime = System.currentTimeMillis()

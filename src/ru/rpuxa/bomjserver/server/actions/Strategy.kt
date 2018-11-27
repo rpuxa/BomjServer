@@ -4,17 +4,18 @@ import ru.rpuxa.bomjserver.server.sqr
 
 object Strategy {
 
+
     /**
-     * first - коэффициент для работы (a)
+     * first - коэффициент для работы (a) 30
      * second - коэффициент для бодрости (b)
      * third - коэффициент для здоровья\еды (c)
      * x - количество дней на восстановление 2 здоровья и 2 бодрости и переработки этих показателей в деньги
      */
     fun calculateCoefficients(days: Int, all: Int, x: Double, a: Double, b: Double, c: Double): Triple<Double, Double, Double> {
         val l = all.toDouble() * x / days
-        val p = 559_504.0
-        val n = 1135.0 / p
-        val m = 1509.0 / p
+        val p = 69_938.0
+        val n = 106_590 / p
+        val m = 84_150 / p
         val i = arrayOf(
                 m * n,
                 m.sqr() + 1,
