@@ -96,16 +96,23 @@ internal object CommandExecutor {
             TRANSPORTS -> transports
             HOMES -> homes
             COURSES -> courses
-            HASH -> Objects.hash(actions, locations, friends, transports, homes, courses)
+            HASH -> Objects.hash(
+                    Arrays.hashCode(actions),
+                    Arrays.hashCode(locations),
+                    Arrays.hashCode(friends),
+                    Arrays.hashCode(transports),
+                    Arrays.hashCode(homes),
+                    Arrays.hashCode(courses)
+            )
             else -> throw IllegalStateException()
         }
     }
 
-    val ACTIONS = 1
-    val LOCATIONS = 2
-    val FRIENDS = 3
-    val TRANSPORTS = 4
-    val HOMES = 5
-    val COURSES = 6
-    val HASH = 7
+    const val ACTIONS = 0
+    const val LOCATIONS = 1
+    const val FRIENDS = 2
+    const val TRANSPORTS = 3
+    const val HOMES = 4
+    const val COURSES = 5
+    const val HASH = 6
 }
