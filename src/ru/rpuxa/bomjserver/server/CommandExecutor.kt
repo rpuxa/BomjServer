@@ -83,30 +83,10 @@ internal object CommandExecutor {
             REVIEW -> DataBase.saveReview(command.data as Review)
             GET_NEWS -> return ServerCommand(GET_NEWS, DataBase.news[command.data as Int])
             NEWS_COUNT -> return ServerCommand(NEWS_COUNT, DataBase.news.size)
-            GET_CACHED_ACTIONS -> return ServerCommand(GET_CACHED_ACTIONS, getCached(command.data as Int))
         }
         return null
     }
 
-    private fun getCached(type: Int) = with(cached) {
-        when (type) {
-            ACTIONS -> actions
-            LOCATIONS -> locations
-            FRIENDS -> friends
-            TRANSPORTS -> transports
-            HOMES -> homes
-            COURSES -> courses
-            HASH -> Objects.hash(
-                    Arrays.hashCode(actions),
-                    Arrays.hashCode(locations),
-                    Arrays.hashCode(friends),
-                    Arrays.hashCode(transports),
-                    Arrays.hashCode(homes),
-                    Arrays.hashCode(courses)
-            )
-            else -> throw IllegalStateException()
-        }
-    }
 
     const val ACTIONS = 0
     const val LOCATIONS = 1

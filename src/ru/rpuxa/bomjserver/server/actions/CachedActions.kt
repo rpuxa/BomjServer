@@ -3,19 +3,11 @@ package ru.rpuxa.bomjserver.server.actions
 import ru.rpuxa.bomjserver.CachedAction
 import ru.rpuxa.bomjserver.CachedChainElement
 import ru.rpuxa.bomjserver.CachedCourse
-import java.io.FileOutputStream
-import java.io.ObjectOutputStream
+import java.io.*
 import java.util.*
 import kotlin.math.round
 
 class CachedActions(params: Array<LocationParams>) {
-    val actions: Array<CachedAction>
-    val locations: Array<CachedChainElement>
-    val friends: Array<CachedChainElement>
-    val transports: Array<CachedChainElement>
-    val homes: Array<CachedChainElement>
-    val courses: Array<CachedCourse>
-
     private val actionsList = ArrayList<CachedAction>()
 
     init {
@@ -134,55 +126,52 @@ class CachedActions(params: Array<LocationParams>) {
             }
         }
 
-        actions = actionsList.toTypedArray()
+       DataOutputStream(FileOutputStream(ACTIONS_NAME)).use { stream ->
+            stream.writeShort(actionsList.size)
+            actionsList.forEach { action ->
+                stream.writeShort(action.id.toInt())
+                stream.writeByte(action.level.toInt())
+                stream.writeByte(action.menu.toInt())
+                stream.writeUTF(action.name)
+                stream.writeInt(action.cost)
+                stream.writeByte(action.energy.toInt())
+                stream.writeByte(action.food.toInt())
+                stream.writeByte(action.health.toInt())
+                stream.writeBoolean(action.isIllegal)
+            }
+            arrayOf(Actions.transports, Actions.homes, Actions.friends, Actions.locations).forEach { chainElements ->
+                stream.writeByte(chainElements.size)
+                chainElements.forEachIndexed { i, e ->
+                    stream.writeUTF(e.name)
+                    if (chainElements === Actions.locations) {
+                        stream.writeByte(i)
+                        stream.writeByte(i)
+                        stream.writeByte(i)
+                        stream.writeByte(0)
+                    } else {
+                        stream.writeByte(i - 1)
+                        stream.writeByte(i - 1)
+                        stream.writeByte(i - 1)
+                        stream.writeByte(i - 1)
+                    }
+                    stream.writeByte(e.course)
+                    stream.writeInt(e.cost.value)
+                }
+            }
 
-        locations = Actions.locations.mapIndexed { index, element ->
-            CachedChainElement(
-                    element.name, (index - 1).toByte(), (index - 1).toByte(),
-                    index.toByte(), index.toByte(), element.course.toByte(),
-                    element.cost.value, element.cost.currency.toByte()
-            )
-        }.toTypedArray()
-
-        friends = Actions.friends.mapIndexed { index, element ->
-            CachedChainElement(
-                    element.name, index.toByte(), (index - 1).toByte(),
-                    index.toByte(), index.toByte(), element.course.toByte(),
-                    element.cost.value, element.cost.currency.toByte()
-            )
-        }.toTypedArray()
-
-        transports = Actions.transports.transportsOrHomesToCached()
-        homes = Actions.homes.transportsOrHomesToCached()
-
-        courses = Actions.courses.map {
-            CachedCourse(
-                    it.id.toByte(), it.name, it.cost.value,
-                    it.cost.currency.toByte(), it.length.toShort()
-            )
-        }.toTypedArray()
+            stream.writeByte(Actions.courses.size)
+            Actions.courses.forEach {
+                stream.writeByte(it.id)
+                stream.writeUTF(it.name)
+                stream.writeInt(it.cost.value)
+                stream.writeShort(it.length)
+            }
+        }
     }
-
-    private fun ArrayList<ChainElement>.transportsOrHomesToCached() = mapIndexed { index, element ->
-        CachedChainElement(
-                element.name, (index - 1).toByte(), (index - 1).toByte(),
-                (index - 1).toByte(), (index - 1).toByte(), element.course.toByte(),
-                element.cost.value, element.cost.currency.toByte()
-        )
-    }.toTypedArray()
 
     private fun Double.convertTo(currency: Int) = this / Money.getCU(currency)
 
-    fun saveToFile() {
-        try {
-            ObjectOutputStream(FileOutputStream("actions.bomj")).use {
-                val array = arrayOf(actions, locations, friends, transports, homes, courses)
-                for (a in array)
-                    it.writeObject(a)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
+    companion object {
+        const val ACTIONS_NAME = "new_actions.bomj"
     }
 }

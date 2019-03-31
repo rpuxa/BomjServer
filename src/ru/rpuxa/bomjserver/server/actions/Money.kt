@@ -8,8 +8,6 @@ class Money(val value: Int, val currency: Int) {
         fun getCU(currency: Int) = when (currency) {
             RUB -> 2
             BOTTLES -> 3
-            EURO -> 140
-            BITCOIN -> 4000
             else -> throw Exception()
         }
     }

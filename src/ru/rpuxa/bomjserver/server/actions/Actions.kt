@@ -3,8 +3,6 @@ package ru.rpuxa.bomjserver.server.actions
 import java.util.*
 
 const val RUB = 0
-const val EURO = 1
-const val BITCOIN = 2
 const val BOTTLES = 3
 
 const val ENERGY = 0
@@ -31,8 +29,6 @@ object Actions {
             courses.find { it.id == id }
 
     private val Int.rub get() = Money(this, RUB)
-    private val Int.euro get() = Money(this, EURO)
-    private val Int.bitcoin get() = Money(this, BITCOIN)
     private val Int.bottle get() = Money(this, BOTTLES)
     private val FREE = Money(0, RUB)
 
@@ -41,11 +37,11 @@ object Actions {
                 Course(0, "Езда на самокате", 50.rub, 10),
                 Course(1, "Езда на велосипеде", 200.rub, 30),
                 Course(2, "ПДД", 900.rub, 50),
-                Course(3, "Строение авто", 90.euro, 100),
-                Course(4, "Строительство", 90.euro, 100),
-                Course(5, "Программирование", 290.euro, 100),
-                Course(6, "Торговле валютами", 490.euro, 100),
-                Course(7, "Управление персоналом", 39.bitcoin, 100)
+                Course(3, "Строение авто", (90 * 70).rub, 100),
+                Course(4, "Строительство", (90* 70).rub, 100),
+                Course(5, "Программирование", (290* 70).rub, 100),
+                Course(6, "Торговле валютами", (490* 70).rub, 100),
+                Course(7, "Управление персоналом", (39* 2000).rub, 100)
         )
 
         location(0, "Помойка на окраине") {
@@ -180,7 +176,7 @@ object Actions {
         }
 
         location(4, "Дача") {
-            friend("Прораб Михалыч", 29.euro, 4)
+            friend("Прораб Михалыч", (29 * 70).rub, 4)
             transport("Девятка", 29000.rub, 3)
             home("Сарай", 27900.rub)
 
@@ -194,112 +190,112 @@ object Actions {
             health {
                 add(71, "Купить антибиотики")
                 add(72, "Сходить в больницу")
-                add(73, "Знакомый врач", currency = EURO)
+                add(73, "Знакомый врач")
             }
 
             energy {
                 add(74, "Поспать", free = true)
                 add(75, "Купить водяры")
                 add(76, "Купить коньяк")
-                add(77, "Купить хорошего вина", currency = EURO)
+                add(77, "Купить хорошего вина")
             }
 
             job {
                 add(15, "Месить цемент")
                 add(16, "Клеить обои")
                 add(17, "Класть плитку")
-                add(18, "Тырить вещи со стройки", currency = EURO, illegal = true)
+                add(18, "Тырить вещи со стройки", illegal = true)
             }
         }
 
         location(5, "Квартира в микрорайоне") {
-            friend("Программист Слава", 90.euro, 5)
-            transport("Старая Иномарка", 1900.euro)
-            home("Однушка", 2200.euro)
+            friend("Программист Слава", (90 * 70).rub, 5)
+            transport("Старая Иномарка", (1900 * 70).rub)
+            home("Однушка", (2200 * 70).rub)
 
             food {
                 add(78, "Пойти в Ашан")
                 add(79, "Заказать пиццу")
-                add(80, "Пойти в ресторан", currency = EURO)
+                add(80, "Пойти в ресторан")
             }
             health {
                 add(81, "Гос больница")
-                add(82, "Знакомый врач", currency = EURO)
-                add(83, "Частная больница", currency = EURO)
+                add(82, "Знакомый врач")
+                add(83, "Частная больница")
             }
             energy {
                 add(84, "Поспать", free = true)
                 add(85, "Купить абсент")
-                add(86, "Купить коньяк", currency = EURO)
-                add(87, "Купить дорогой виски", currency = EURO)
+                add(86, "Купить коньяк")
+                add(87, "Купить дорогой виски")
             }
 
             job {
                 add(19, "Работать в колл-центре")
-                add(20, "Работать в службе поддержки", currency = EURO)
-                add(21, "Кодить сайты", currency = EURO)
-                add(22, "Написать вирус", currency = EURO, illegal = true)
-                add(23, "Написать Симулятор бомжа", currency = EURO, illegal = true)
+                add(20, "Работать в службе поддержки")
+                add(21, "Кодить сайты")
+                add(22, "Написать вирус", illegal = true)
+                add(23, "Написать Симулятор бомжа", illegal = true)
             }
         }
 
         location(6, "Центр города") {
-            friend("Трейдер Юля", 290.euro, 6)
-            transport("Иномарка среднего класса", 3900.euro)
-            home("Двухкомнатная квартира", 3990.euro)
+            friend("Трейдер Юля", (290 * 70).rub, 6)
+            transport("Иномарка среднего класса", (3900 * 70).rub)
+            home("Двухкомнатная квартира", (3990 * 70).rub)
 
             food {
                 add(88, "Сходить в ТЦ")
-                add(89, "Сходить в шашлычную", currency = EURO)
-                add(90, "Пойти в ресторан", currency = EURO)
+                add(89, "Сходить в шашлычную")
+                add(90, "Пойти в ресторан")
             }
             health {
                 add(91, "Вызвать врача")
-                add(92, "Купить иностранные таблетки", currency = EURO)
-                add(93, "Частная клиника", currency = EURO)
+                add(92, "Купить иностранные таблетки")
+                add(93, "Частная клиника")
             }
             energy {
                 add(94, "Поспать", free = true)
                 add(95, "Сходить в спортзал")
-                add(96, "Сходить в фитнес клуб", currency = EURO)
-                add(97, "Нанять тренера", currency = EURO)
+                add(96, "Сходить в фитнес клуб")
+                add(97, "Нанять тренера")
             }
 
             job {
                 add(24, "Зарабатывать на бинарных опционах")
-                add(25, "Управление капиталом", currency = EURO)
-                add(26, "Продажа акций", currency = EURO)
-                add(27, "Махинации с курсами валют", currency = BITCOIN, illegal = true)
+                add(25, "Управление капиталом")
+                add(26, "Продажа акций")
+                add(27, "Махинации с курсами валют",  illegal = true)
             }
         }
 
         location(7, "Заграница") {
-            friend("Директор IT компании Эдвард", 19.bitcoin, 7)
-            transport("Внедорожник", 340.bitcoin)
-            home("Частный дом", 450.bitcoin)
+            friend("Директор IT компании Эдвард", (19 * 2000).rub, 7)
+            transport("Внедорожник", (340  * 2000).rub)
+            home("Частный дом", (450 * 2000).rub)
 
             food {
-                add(98, "Сходить на рыбалку", currency = EURO)
-                add(99, "Приготовить черепаху", currency = EURO)
-                add(100, "Посетить ресторан на плаву", currency = EURO)
+                add(98, "Сходить на рыбалку")
+                add(99, "Приготовить черепаху")
+                add(100, "Посетить ресторан на плаву")
             }
             health {
-                add(101, "Лечение пиявками", currency = EURO)
-                add(102, "Частная клиника", currency = EURO)
-                add(103, "Иностранные врачи", currency = EURO)
+                add(101, "Лечение пиявками")
+                add(102, "Частная клиника")
+                add(103, "Иностранные врачи")
             }
             energy {
                 add(104, "Поспать", free = true)
-                add(105, "Грязевые ванны", currency = EURO)
-                add(106, "Сходить в фитнес клуб", currency = EURO)
-                add(107, "Нырять с аквалангом", currency = EURO)
+                add(105, "Грязевые ванны")
+                add(106, "Сходить в фитнес клуб")
+                add(107, "Нырять с аквалангом")
             }
 
             job {
-                add(28, "Руководить в отделе безопасности", currency = EURO)
-                add(29, "Управление компанией", currency = EURO)
-                add(30, "Разработка ПО для иностранных коллег", currency = EURO)
-                add(31, "Взлом базы данных конкурентов", currency = BITCOIN, illegal = true)
+                add(28, "Руководить в отделе безопасности")
+                add(29, "Управление компанией")
+                add(30, "Разработка ПО для иностранных коллег")
+                add(31, "Взлом базы данных конкурентов", illegal = true)
             }
         }
     }

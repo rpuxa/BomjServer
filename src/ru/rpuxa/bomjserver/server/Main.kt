@@ -1,5 +1,6 @@
 package ru.rpuxa.bomjserver.server
 
+import ru.rpuxa.bomjserver.server.actions.Actions
 import ru.rpuxa.bomjserver.server.actions.CachedActions
 import ru.rpuxa.bomjserver.server.actions.LocationParams
 import java.io.BufferedReader
@@ -10,11 +11,11 @@ val params = arrayOf(
         LocationParams(0, 200, 50.0, 40.0, 40.0),
         LocationParams(1, 350, 120.0, 100.0, 120.0),
         LocationParams(2, 450, 400.0, 200.0, 180.0),
-        LocationParams(3, 450, 500.0, 350.0, 320.0),
-        LocationParams(4, 650, 1500.0, 600.0, 700.0),
-        LocationParams(5, 800, 3000.0, 1300.0, 1300.0),
-        LocationParams(6, 1000, 6000.0, 2000.0, 2000.0),
-        LocationParams(7, 1000, 12000.0, 4000.0, 4000.0)
+        LocationParams(3, 750, 500.0, 350.0, 320.0),
+        LocationParams(4, 1050, 1500.0, 600.0, 700.0),
+        LocationParams(5, 1500, 3000.0, 1300.0, 1300.0),
+        LocationParams(6, 5000, 6000.0, 2000.0, 2000.0),
+        LocationParams(7, 5000, 12000.0, 4000.0, 4000.0)
 )
 val cached = CachedActions(params)
 private val server = SocketServer()
@@ -62,7 +63,7 @@ fun main(unused: Array<String>) {
                 }
 
                 "actionsList" -> {
-                    cached.saveToFile()
+                    Actions
                     println("Файл создан!!")
                 }
 
