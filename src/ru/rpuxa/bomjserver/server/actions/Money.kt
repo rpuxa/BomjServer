@@ -6,8 +6,8 @@ class Money(val value: Int, val currency: Int) {
 
     companion object {
         fun getCU(currency: Int) = when (currency) {
-            RUB -> 2
-            BOTTLES -> 3
+            RUB -> 1
+            BOTTLES -> 2
             else -> throw Exception()
         }
     }

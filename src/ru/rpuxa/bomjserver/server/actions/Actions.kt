@@ -3,7 +3,7 @@ package ru.rpuxa.bomjserver.server.actions
 import java.util.*
 
 const val RUB = 0
-const val BOTTLES = 3
+const val BOTTLES = 1
 
 const val ENERGY = 0
 const val FOOD = 1
@@ -38,10 +38,10 @@ object Actions {
                 Course(1, "Езда на велосипеде", 200.rub, 30),
                 Course(2, "ПДД", 900.rub, 50),
                 Course(3, "Строение авто", (90 * 70).rub, 100),
-                Course(4, "Строительство", (90* 70).rub, 100),
-                Course(5, "Программирование", (290* 70).rub, 100),
-                Course(6, "Торговле валютами", (490* 70).rub, 100),
-                Course(7, "Управление персоналом", (39* 2000).rub, 100)
+                Course(4, "Строительство", (90 * 70).rub, 100),
+                Course(5, "Программирование", (290 * 70).rub, 100),
+                Course(6, "Торговле валютами", (490 * 70).rub, 100),
+                Course(7, "Управление персоналом", (39 * 2000).rub, 100)
         )
 
         location(0, "Помойка на окраине") {
@@ -182,8 +182,8 @@ object Actions {
 
             food {
                 add(67, "Сварить мясной бульон")
-                add(68, "Пойти в магаз")
                 add(69, "Заказать пиццу")
+                add(68, "Пойти в магаз")
                 add(70, "Ограбить ларек", illegal = true)
             }
 
@@ -265,13 +265,13 @@ object Actions {
                 add(24, "Зарабатывать на бинарных опционах")
                 add(25, "Управление капиталом")
                 add(26, "Продажа акций")
-                add(27, "Махинации с курсами валют",  illegal = true)
+                add(27, "Махинации с курсами валют", illegal = true)
             }
         }
 
         location(7, "Заграница") {
             friend("Директор IT компании Эдвард", (19 * 2000).rub, 7)
-            transport("Внедорожник", (340  * 2000).rub)
+            transport("Внедорожник", (340 * 2000).rub)
             home("Частный дом", (450 * 2000).rub)
 
             food {

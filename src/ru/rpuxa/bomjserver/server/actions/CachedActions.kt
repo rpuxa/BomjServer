@@ -50,11 +50,11 @@ class CachedActions(params: Array<LocationParams>) {
                 }
 
                 val healthNeeded = energyNeeded / 2
-
-                val salary = (round((
-                        energyNeeded * jobC).convertTo(action.currency) *
-                        if (action.illegal) 2 else 1
-                )).toInt()
+                val a = round(energyNeeded * jobC)
+                val salary = (
+                        a.convertTo(action.currency) *
+                                if (action.illegal) 2 else 1
+                        ).toInt()
 
                 actionsList.add(CachedAction(
                         action.id.toShort(), param.level.toByte(), JOBS.toByte(), action.name,
@@ -126,7 +126,7 @@ class CachedActions(params: Array<LocationParams>) {
             }
         }
 
-       DataOutputStream(FileOutputStream(ACTIONS_NAME)).use { stream ->
+        DataOutputStream(FileOutputStream(ACTIONS_NAME)).use { stream ->
             stream.writeShort(actionsList.size)
             actionsList.forEach { action ->
                 stream.writeShort(action.id.toInt())
@@ -134,6 +134,7 @@ class CachedActions(params: Array<LocationParams>) {
                 stream.writeByte(action.menu.toInt())
                 stream.writeUTF(action.name)
                 stream.writeInt(action.cost)
+                stream.writeByte(action.currency.toInt())
                 stream.writeByte(action.energy.toInt())
                 stream.writeByte(action.food.toInt())
                 stream.writeByte(action.health.toInt())
@@ -143,19 +144,29 @@ class CachedActions(params: Array<LocationParams>) {
                 stream.writeByte(chainElements.size)
                 chainElements.forEachIndexed { i, e ->
                     stream.writeUTF(e.name)
-                    if (chainElements === Actions.locations) {
-                        stream.writeByte(i)
-                        stream.writeByte(i)
-                        stream.writeByte(i)
-                        stream.writeByte(0)
-                    } else {
-                        stream.writeByte(i - 1)
-                        stream.writeByte(i - 1)
-                        stream.writeByte(i - 1)
-                        stream.writeByte(i - 1)
+                    when {
+                        chainElements === Actions.locations -> {
+                            stream.writeByte(i)
+                            stream.writeByte(i)
+                            stream.writeByte(0)
+                            stream.writeByte(0)
+                        }
+                        chainElements === Actions.friends -> {
+                            stream.writeByte(0)
+                            stream.writeByte(0)
+                            stream.writeByte(0)
+                            stream.writeByte(i)
+                        }
+                        else -> {
+                            stream.writeByte(i - 1)
+                            stream.writeByte(i - 1)
+                            stream.writeByte(i - 1)
+                            stream.writeByte(i - 1)
+                        }
                     }
                     stream.writeByte(e.course)
                     stream.writeInt(e.cost.value)
+                    stream.writeByte(e.cost.currency)
                 }
             }
 
