@@ -8,20 +8,22 @@ import java.io.InputStreamReader
 import kotlin.concurrent.thread
 
 val params = arrayOf(
-        LocationParams(0, 200, 50.0, 40.0, 40.0),
-        LocationParams(1, 350, 120.0, 100.0, 120.0),
-        LocationParams(2, 450, 400.0, 200.0, 180.0),
-        LocationParams(3, 450, 500.0, 350.0, 320.0),
-        LocationParams(4, 650, 1500.0, 600.0, 700.0),
-        LocationParams(5, 800, 3000.0, 1300.0, 1300.0),
-        LocationParams(6, 1000, 6000.0, 2000.0, 2000.0),
-        LocationParams(7, 1000, 12000.0, 4000.0, 4000.0)
+        LocationParams(0, 200, 1.3, 1.0),
+        LocationParams(1, 350, 2.0, 1.8),
+        LocationParams(2, 450, 4.6, 2.4),
+        LocationParams(3, 450, 7.0, 5.1),
+        LocationParams(4, 650, 11.0, 10.0),
+        LocationParams(5, 800, 20.0, 17.7),
+        LocationParams(6, 1000, 34.4, 31.1),
+        LocationParams(7, 1000, 50.0, 46.0)
 )
 val cached = CachedActions(params)
 private val server = SocketServer()
 private val reader = BufferedReader(InputStreamReader(System.`in`))
 
-fun main(unused: Array<String>) {
+
+
+fun main(args: Array<String>) {
     try {
         thread(isDaemon = true) {
             while (true) {

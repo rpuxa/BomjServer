@@ -1,8 +1,6 @@
 package ru.rpuxa.bomjserver.server.actions
 
 import ru.rpuxa.bomjserver.CachedAction
-import ru.rpuxa.bomjserver.CachedChainElement
-import ru.rpuxa.bomjserver.CachedCourse
 import java.io.*
 import java.util.*
 import kotlin.math.round
@@ -24,10 +22,15 @@ class CachedActions(params: Array<LocationParams>) {
                 all += element.cost.toCU()
             }
 
-            var (jobC, energyC, healthC) = Strategy.calculateCoefficients(param.days, all, 2.2, param.jobCost, param.energyCost, param.healthCost)
-            jobC /= 30
-            energyC /= 30
-            healthC /= 30
+            val jobC = Strategy.calculateCoefficients(
+                    all,
+                    param.days,
+                    (1.0 / 50 + 1.0 / 50 + 1.0 / 20),
+                    param.healthCost,
+                    param.energyCost
+                    )
+            val healthC = param.healthCost
+            val energyC = param.energyCost
             // работа
             var illegalIndex = 0
             var legalIndex = 0
@@ -50,7 +53,7 @@ class CachedActions(params: Array<LocationParams>) {
                 }
 
                 val healthNeeded = energyNeeded / 2
-                val a = round(energyNeeded * jobC)
+                val a = round(energyNeeded * jobC / 2)
                 val salary = (
                         a.convertTo(action.currency) *
                                 if (action.illegal) 2 else 1

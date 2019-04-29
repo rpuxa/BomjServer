@@ -79,7 +79,7 @@ object Actions {
         }
 
         location(1, "Подъезд") {
-            friend("Сосед по подъезду Василий", 30.bottle)
+            friend("Сосед по подъезду Василий", 60.bottle)
             transport("Самокат", 400.rub, 0)
             home("Палатка б/у", 700.rub)
 
@@ -111,7 +111,7 @@ object Actions {
         }
 
         location(2, "Гаражи") {
-            friend("Гопник Валера", 150.bottle)
+            friend("Гопник Валера", 300.bottle)
             transport("Велосипед", 1900.rub, 1)
             home("Гараж улитка", 7800.rub)
 

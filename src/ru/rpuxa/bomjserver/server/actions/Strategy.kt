@@ -6,28 +6,14 @@ object Strategy {
 
 
     /**
-     * first - коэффициент для работы (a) 30
-     * second - коэффициент для бодрости (b)
-     * third - коэффициент для здоровья\еды (c)
-     * x - количество дней на восстановление 2 здоровья и 2 бодрости и переработки этих показателей в деньги
+     * [a] - денег на локацию
+     * [l] - сколько дней нужно задержаться на локации
+     * [sigma] - сколько дней нужно потратить на восстановление 1 здоровья, энергии и на чтобы из потратить в работе
+     * [alpha] - цена 1 здоровья
+     * [gamma] - цена 1 энергии
+     * @return сколько денег можно получить на 2 здоровья и 2 энергии
      */
-    fun calculateCoefficients(days: Int, all: Int, x: Double, a: Double, b: Double, c: Double): Triple<Double, Double, Double> {
-        val l = all.toDouble() * x / days
-        val p = 69_938.0
-        val n = 106_590 / p
-        val m = 84_150 / p
-        val i = arrayOf(
-                m * n,
-                m.sqr() + 1,
-                l * m - a * m - b,
-                n.sqr() + 1,
-                m * n,
-                l * n - a * n - c
-        )
-        val beta = (i[2] * i[3] - i[5] * i[0]) / (i[0] * i[4] - i[1] * i[3])
-        val gamma = -(i[2] + i[1] * beta) / i[0]
-        val alpha = l + n * gamma + m * beta
-
-        return Triple(alpha, beta, gamma)
+    fun calculateCoefficients(a: Int, l: Int, sigma: Double, alpha: Double, gamma: Double): Double {
+        return a.toDouble() * sigma / l + 2 * alpha + 2 * gamma
     }
 }
